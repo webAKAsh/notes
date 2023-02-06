@@ -5,16 +5,18 @@ import { useState } from "react";
 const Note = () => {
   const router = useRouter();
   const { note } = router.query;
-
-  const keys = Object.keys(localStorage);
-  const dataKey = keys.filter((key) => key.includes("userNote"));
-  const data = JSON.parse(localStorage.getItem(dataKey[note]));
+  const data = JSON.parse(note)
   const [title, setTitle] = useState(data.title)
   const [desc, setDesc] = useState(data.desc)
   
   const editData = () => {
     const noteData = {title, desc}
-    localStorage.setItem(dataKey[note], JSON.stringify(noteData))
+    const keys = Object.keys(localStorage);
+    const val = Object.values(localStorage);
+    const dataKey = keys.filter((key) => key.includes("userNote"));
+    const identity = val.indexOf(note) - 1
+    
+    localStorage.setItem(dataKey[identity], JSON.stringify(noteData))
     router.push("/")
   };
   return (

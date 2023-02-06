@@ -114,7 +114,7 @@ const Notes = () => {
                       onClick={() => deleteNote(note, i)}
                       className="cursor-pointer text-white"
                     />
-                    <Link href={`/notes/${i}`}>
+                    <Link href={`/notes/${JSON.stringify(note)}`}>
                       <FiEdit className="cursor-pointer text-white" />
                     </Link>
                   </div>
