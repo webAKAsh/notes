@@ -10,14 +10,7 @@ const Notes = () => {
   const [desc, setDesc] = useState("");
   const [notes, setNotes] = useState([]);
   const [dataKey, setDataKey] = useState([]);
-
-  useEffect(() => {
-    const keys = Object.keys(localStorage);
-    const dataKey = keys.filter((key) => key.includes("userNote"));
-    setDataKey(dataKey);
-    let dataValues = dataKey.map((e) => JSON.parse(localStorage.getItem(e)));
-    setNotes(dataValues);
-  }, []);
+  const [noteState, setNoteState] = useState(false)
 
   const selectColor = () => {
     const authenticationModal = document.querySelector("#authentication-modal");
@@ -33,6 +26,7 @@ const Notes = () => {
 
   const addData = (e) => {
     e.preventDefault();
+    setNoteState(!noteState)
     const noteData = { title, desc };
     const validation = document.querySelector(".validation");
 
@@ -61,7 +55,8 @@ const Notes = () => {
             `userNote_${randomNumb}`,
             JSON.stringify(noteData)
           );
-          location.reload();
+          closeModal();
+          setNoteState(!noteState)
         } else if (desc === "") {
           description.setAttribute("required", "true");
           console.log("please write desc");
@@ -71,15 +66,27 @@ const Notes = () => {
           `userNote_${randomNumb}`,
           JSON.stringify(noteData)
         );
-        location.reload();
+        closeModal();
+        setNoteState(!noteState)
       }
     }
   };
 
   const deleteNote = (e, index) => {
+    setNoteState(!noteState)
     localStorage.removeItem(dataKey[index]);
-    location.reload();
   };
+
+  useEffect(() => {
+    const keys = Object.keys(localStorage);
+    const dataKey = keys.filter((key) => key.includes("userNote"));
+    setDataKey(dataKey);
+    let dataValues = dataKey.map((e) => JSON.parse(localStorage.getItem(e)))
+    setNotes(dataValues);
+
+    console.log(title, desc, notes, noteState);
+
+  }, [noteState]);
 
   return (
     <>
@@ -114,7 +121,8 @@ const Notes = () => {
                       onClick={() => deleteNote(note, i)}
                       className="cursor-pointer text-white"
                     />
-                    <Link href={`/notes/${JSON.stringify(note)}`}>
+                    {/* <Link href={`/notes/${JSON.stringify(note)}`}> */}
+                    <Link href={`/notes/${i}`}>
                       <FiEdit className="cursor-pointer text-white" />
                     </Link>
                   </div>
